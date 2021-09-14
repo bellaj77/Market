@@ -1,0 +1,15 @@
+<% include('partials/header') %>
+
+    <h1>Edit individual product</h1>
+
+    <form action="/products/<%=product.id%>/edit?_method=PATCH" method="post">
+        <textarea name="product" id="product" cols="30" rows="5">
+    <%= product.product %> 
+</textarea>
+        <textarea name="price" id="price" cols="30" rows="5">
+    <%= product.price %> 
+</textarea>
+        <button>Submit</button>
+    </form>
+
+    <% include('partials/footer') %>

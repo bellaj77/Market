@@ -1,0 +1,19 @@
+<%- include('partials/header') %>
+
+    <h1>Index product page</h1>
+
+    <ul>
+        <% for(let p of products) { %>
+            <li>
+                <%= p.product %> -
+                    <b>
+                        <%= p.price %>
+                    </b>
+                    <a href="/products/<%=p.id%>">details </a>
+            </li>
+            <% } %>
+    </ul>
+
+
+
+    <%- include('partials/footer') %>
