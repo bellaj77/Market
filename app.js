@@ -1,7 +1,6 @@
 // required npm packages
 const express = require('express');
 const mongoose = require('mongoose');
-const app = express();
 const path = require('path');
 const methodOverride = require('method-override');
 const { v4: uuid } = require('uuid');
@@ -22,6 +21,7 @@ db.once("open", () => {
 })
 
 // middlewares
+const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.set('view engine', 'ejs');
