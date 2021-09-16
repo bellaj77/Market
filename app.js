@@ -28,20 +28,6 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'))
 app.use(methodOverride('_method'));
 
-// seeding
-const products = [
-    {
-        id: uuid(),
-        product: 'milk',
-        price: 3.99,
-    },
-
-    {
-        id: uuid(),
-        product: 'eggs',
-        price: 4.99,
-    }
-]
 
 // routes
 app.get('/', (req, res) => {
