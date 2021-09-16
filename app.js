@@ -1,29 +1,33 @@
+// required npm packages
 const express = require('express');
-const app = express();
+const mongoose = require('mongoose');
 const path = require('path');
 const methodOverride = require('method-override');
 const { v4: uuid } = require('uuid');
 
+// required models
+const Product = require('./models/product');
 
+// mongoose connection
+mongoose.connect('mongodb://localhost:27017/market', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+    console.log("Database connected");
+})
+
+// middlewares
+const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'))
 app.use(methodOverride('_method'));
 
-const products = [
-    {
-        id: uuid(),
-        product: 'milk',
-        price: 3.99,
-    },
-
-    {
-        id: uuid(),
-        product: 'eggs',
-        price: 4.99,
-    }
-]
 
 // routes
 app.get('/', (req, res) => {
