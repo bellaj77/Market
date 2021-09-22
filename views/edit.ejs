@@ -1,14 +1,21 @@
 <% include('partials/header') %>
 
-    <h1>Edit individual product</h1>
+    <h1>Edit Product</h1>
 
-    <form action="/products/<%=product.id%>/edit?_method=PATCH" method="post">
-        <textarea name="product" id="product" cols="30" rows="5">
-    <%= product.product %> 
-</textarea>
-        <textarea name="price" id="price" cols="30" rows="5">
-    <%= product.price %> 
-</textarea>
+    <form action="/products/<%= product._id %>?_method=PUT" <%=product._id %> " method="post">
+        <label for="product">Product:</label>
+        <input type="text" id="product" placeholder="Product name" name="name" value="<%= product.name %> ">
+        <label for="price">Price:</label>
+        <input type="number" id="price" placeholder="Price" name="price" value="<%= product.price %> ">
+        <label for="category">Select Category:</label>
+        <select name="category" id="category">
+            <% for(let category of categories) { %>
+                <option value="<%=category%>">
+                    <%=category%>
+                        <%= product.category===category ? 'selected' : ''>
+                </option>
+                <% } %>
+        </select>
         <button>Submit</button>
     </form>
 
