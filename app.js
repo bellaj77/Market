@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const methodOverride = require('method-override');
+const ejsMate = require('ejs-mate');
 const { v4: uuid } = require('uuid');
 
 // required models
@@ -26,7 +27,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'))
+app.engine('ejs', ejsMate);
 app.use(methodOverride('_method'));
+
+const categories = ['fruit', 'vegetable', 'dairy', 'bakery', 'cannery', 'meat']
 
 
 // routes
@@ -34,31 +38,54 @@ app.get('/', (req, res) => {
     res.render('home')
 })
 
-app.get('/products', (req, res) => {
-    res.render('index', { products })
+app.get('/products', async (req, res) => {
+    const { category } = req.query;
+    if (category) {
+        const products = await Product.find({ category });
+        res.render('products/index', { products, category })
+    } else {
+        const products = await Product.find({});
+        res.render('index', { products, category: 'All' })
+    }
 })
 
 app.get('/products/new', (req, res) => {
-    res.render('new')
+    res.render('new', { categories })
 })
 
-app.post('/products', (req, res) => {
-    const { product, price } = req.body;
-    products.push({ product, price, id: uuid() })
+app.post('/products', async (req, res) => {
+    const newProduct = await new Product(req.body);
+    await newProduct.save();
+    console.log(newProduct)
     res.redirect('products')
 })
 
-app.get('products/:id/edit', (req, res) => {
-    res.render('edit')
+app.get('/products/:id', async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findById(id)
+    console.log(product);
+    res.render('show', { product })
 })
 
-app.patch('/products/:id', (req, res) => {
+app.get('products/:id/edit', async (req, res) => {
     const { id } = req.params;
-    const newProduct = req.body.product;
-    const foundProduct = product.find(p => p.id === id);
-    foundProduct.product = newProduct;
-    res.redirect('/products')
+    const product = await Product.findById(id);
+    res.render('edit', { product, categories })
 })
+
+app.put('/products/:id', async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findByIdAndUpdate(id, req.body, { runValidators: true, new: true })
+    res.redirect(`/products/${product._id}`)
+})
+
+app.delete('/products/:id', async (req, res) => {
+    const { id } = req.params;
+    const deletedProduct = await Product.findByIdAndDelete(id);
+    res.redirect('/products');
+})
+
+
 
 app.get('*', (req, res) => {
     res.send('Oops! I do not know this route!')

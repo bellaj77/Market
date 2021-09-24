@@ -1,5 +1,4 @@
-<% include('partials/header') %>
-
+<% layout('layouts/boilerplate') %>
     <h1>Edit individual product</h1>
 
     <form action="/products/<%=product.id%>/edit?_method=PATCH" method="post">
@@ -11,5 +10,3 @@
 </textarea>
         <button>Submit</button>
     </form>
-
-    <% include('partials/footer') %>
