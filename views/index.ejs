@@ -2,13 +2,13 @@
     <h1>Index product page</h1>
 
     <ul>
-        <% for(let p of products) { %>
+        <% for(let product of products) { %>
             <li>
-                <%= p.product %> -
+                <%= product.name %> -
                     <b>
-                        <%= p.price %>
+                        <%= product.price %>
                     </b>
-                    <a href="/products/<%=p.id%>">details </a>
+                    <a href="/products/<%=product.id%>">details </a>
             </li>
             <% } %>
     </ul>
