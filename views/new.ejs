@@ -3,16 +3,24 @@
     <h1>New Product Page</h1>
 
 
-    <form class="row g-3" action="/products" method="post">
+    <form class="row g-3 validated-form" action="/products" method="post" novalidate>
+
         <div class="col-md-6">
             <label for="product" class="form-label">Product:</label>
-            <input class="form-control" type="text" id="product" placeholder="Product name" name="name">
+            <input class="form-control" type="text" id="product" placeholder="Product name" name="name" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
         </div>
         <div class="col-md-6">
             <label for="price" class="form-label">Price:</label>
-            <input class="form-control" type="number" id="price" placeholder="Price" name="price">
+            <input class="form-control" type="number" id="price" placeholder="Price" name="price" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
         </div>
-        <!-- <div class="col-md-6">
+
+        <div class="col-md-6">
             <label for="category" class="form-label">Select Category:</label>
             <select class="form-select" name="category" id="category">
                 <% for(let category of categories) { %>
@@ -21,17 +29,36 @@
                     </option>
                     <% } %>
             </select>
-        </div> -->
-
-        <div class="col-md-4">
-            <label for="inputState" class="form-label">State</label>
-            <select id="inputState" class="form-select">
-                <option selected>Choose...</option>
-                <option>...</option>
-            </select>
         </div>
+
+
 
         <div class="col-12">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
+
     </form>
+
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  const forms = document.querySelectorAll('.validated-form')
+
+  // Loop over them and prevent submission
+  Array.from(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+
+    </script>

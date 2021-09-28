@@ -3,7 +3,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const methodOverride = require('method-override');
+const ExpressError = require('./utils/ExpressError')
 const ejsMate = require('ejs-mate');
+const catchAsync = require('./utils/catchAsync')
 const { v4: uuid } = require('uuid');
 
 // required models
@@ -38,57 +40,68 @@ app.get('/', (req, res) => {
     res.render('home')
 })
 
-app.get('/products', async (req, res) => {
-    const { category } = req.query;
-    if (category) {
-        const products = await Product.find({ category });
-        res.render('products/index', { products, category })
-    } else {
-        const products = await Product.find({});
-        res.render('index', { products, category: 'All' })
-    }
-})
+app.get('/products', catchAsync(async (req, res) => {
+        const { category } = req.query;
+        if (category) {
+            const products = await Product.find({ category });
+            res.render('products/index', { products, category })
+        } else {
+            const products = await Product.find({});
+            res.render('index', { products, category: 'All' })
+        }
+    }))
 
 app.get('/products/new', (req, res) => {
     res.render('new', { categories })
 })
 
-app.post('/products', async (req, res) => {
+app.post('/products', catchAsync(async (req, res) => {
+    if(!req.body.product) throw new ExpressError('Invalid Campground Data', 400)
     const newProduct = await new Product(req.body);
     await newProduct.save();
     console.log(newProduct)
     res.redirect('products')
-})
+}))
 
-app.get('/products/:id', async (req, res) => {
+app.get('/products/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id)
     console.log(product);
     res.render('show', { product })
-})
+}))
 
-app.get('products/:id/edit', async (req, res) => {
+app.get('products/:id/edit', catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id);
     res.render('edit', { product, categories })
-})
+}))
 
-app.put('/products/:id', async (req, res) => {
+app.put('/products/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findByIdAndUpdate(id, req.body, { runValidators: true, new: true })
     res.redirect(`/products/${product._id}`)
-})
+}))
 
-app.delete('/products/:id', async (req, res) => {
+app.delete('/products/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     const deletedProduct = await Product.findByIdAndDelete(id);
     res.redirect('/products');
+}))
+
+
+
+// app.get('*', (req, res) => {
+//     res.send('Oops! I do not know this route!')
+// })
+
+app.all('*',(req, res, next) => {
+next(new ExpressError('Page Not Found', 404))
 })
 
-
-
-app.get('*', (req, res) => {
-    res.send('Oops! I do not know this route!')
+app.use((err, req, res, next) => {
+    const {statusCode = 500, message = 'Something went wrong'} = err;
+    if (!err.message) err.message = "oh no something went wrong"
+    res.status(statusCode).render('error', {err});
 })
 
 // port
