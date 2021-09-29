@@ -56,10 +56,9 @@ app.get('/products/new', (req, res) => {
 })
 
 app.post('/products', catchAsync(async (req, res) => {
-    if (!req.body.campground) throw new ExpressError('Invalid Data', 404);
+    // if (!req.body.campground) throw new ExpressError('Invalid Data', 404);
     const newProduct = await new Product(req.body);
     await newProduct.save();
-    console.log(newProduct)
     res.redirect('products')
 }))
 
@@ -93,9 +92,9 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    const { statusCode = 500, message = 'Something went wrong!' } = err;
-    res.status(statusCode).send(message);
-    res.send('Uh oh, something went wrong!')
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = 'Something Went Wrong!'
+    res.status(statusCode).render('error', { err });
 })
 
 // port
