@@ -2,36 +2,34 @@
 
     <h1>New Product Page</h1>
 
-
-    <form class="row g-3" action="/products" method="post">
-        <div class="col-md-6">
-            <label for="product" class="form-label">Product:</label>
-            <input class="form-control" type="text" id="product" placeholder="Product name" name="name">
-        </div>
-        <div class="col-md-6">
-            <label for="price" class="form-label">Price:</label>
-            <input class="form-control" type="number" id="price" placeholder="Price" name="price">
-        </div>
-        <!-- <div class="col-md-6">
-            <label for="category" class="form-label">Select Category:</label>
-            <select class="form-select" name="category" id="category">
-                <% for(let category of categories) { %>
-                    <option value="<%=category%>">
-                        <%=category%>
-                    </option>
-                    <% } %>
-            </select>
-        </div> -->
-
-        <div class="col-md-4">
-            <label for="inputState" class="form-label">State</label>
-            <select id="inputState" class="form-select">
-                <option selected>Choose...</option>
-                <option>...</option>
-            </select>
-        </div>
-
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-    </form>
+    <div class="col-6 offset-4">
+        <form action="/products" method="post" novalidate class="validated-form">
+            <div class="col-md-6">
+                <label for="product" class="form-label">Product:</label>
+                <input class="form-control" type="text" id="product" placeholder="Product name" name="name" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="price" class="form-label">Price:</label>
+                <input class="form-control" type="number" id="price" placeholder="Price" name="price" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="category" class="form-label">Select Category:</label>
+                <select class="form-select" name="category" id="category">
+                    <% for(let category of categories) { %>
+                        <option value="<%=category%>">
+                            <%=category%>
+                        </option>
+                        <% } %>
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
